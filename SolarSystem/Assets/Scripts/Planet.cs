@@ -1,23 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
-    [SerializeField] private float _rotateSpeed;
-    [SerializeField] private float _planetSpeed;
-    [SerializeField] private float _scaleFactor;
+    [SerializeField] private float _selfRotationSpeed;
+    [SerializeField] private float _planetSpaceSpeed;
     [SerializeField] private GameObject _rotationCenter;
 
-    private void Start()
+     private float _scaleFactor = 2;
+
+    [SerializeField] float _minEllipseRadius;
+    [SerializeField] float _maxEllipseRadius;
+    private float _angle;
+
+    private void Awake()
     {
-        transform.localScale = transform.localScale * _scaleFactor;        
+        transform.localScale = transform.localScale * _scaleFactor;
     }
 
-    void Update()
+    private void Update()
     {
-        transform.Rotate(Vector3.up, _rotateSpeed * Time.deltaTime);
+        RotateAroundYourself();
+        RotateLikeEllipse();
+    }
 
-        transform.RotateAround(_rotationCenter.transform.position, Vector3.up, _planetSpeed * Time.deltaTime);
+    private void RotateAroundYourself() 
+    {
+        transform.Rotate(Vector3.up, _selfRotationSpeed * Time.deltaTime);
+    }
+
+
+    private void RotateLikeEllipse() 
+    {
+        _angle += _planetSpaceSpeed * Time.deltaTime;
+
+        float xPos = Mathf.Cos(_angle) * _minEllipseRadius;
+        float yPos = Mathf.Sin(_angle) * _maxEllipseRadius;
+
+        transform.position = new Vector3(xPos, 0, yPos);
     }
 }
